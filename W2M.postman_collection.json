@@ -1,0 +1,207 @@
+{
+	"info": {
+		"_postman_id": "a9ec187a-c1bd-4e22-bb5e-f8186f6d8dce",
+		"name": "W2M",
+		"description": "Conjunto de peticiones para utilizar el CRUD pedido.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7507759"
+	},
+	"item": [
+		{
+			"name": "Ver naves",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/naves",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves"
+					],
+					"query": [
+						{
+							"key": "pagina",
+							"value": "0",
+							"disabled": true
+						},
+						{
+							"key": "tamano",
+							"value": "5",
+							"disabled": true
+						}
+					]
+				},
+				"description": "Este endpoint nos devuelve un listado de todas las naves existentes en nuestra base de datos.\n\nLos parámetros que puede recibir son para configurar la paginación y son \"página\" y \"tamaño\"\n\n- Página: aquí indicamos el número de página que queremos que devuelva. Si no introducimos nada el valor por defecto será 0, es decir, nos devolverá la primera página.\n- Tamaño: aquí indicamos el número de resultados que tendrá cada página. Si no introducimos nada el valor por defecto será 10.\n    \n\nUn supuesto de ejemplo para entender mejor estos parámetros sería el siguiente: nuestra base de datos contiene 100 naves espaciales, si indicamos que el parámetro \"pagina\" sea 1 y el parámetro \"tamano\" sea 50 significa que dividirá el resultado total, que serían 100 naves en dos páginas de 50 resultados cada una y nos devolverá la página 1, como empieza en 0, corresponde a la segunda página. En resumen, este caso de uso nos devolvería los 50 últimos registros de nuestra base de datos.\n\nSI introducimos un valor no permitido en alguno de los dos parámetros, por ejemplo números decimales, negativos o caracteres no numéricos, obtendremos como respuesta un error 500 con el mensaje \"Ocurrió un error inesperado\"."
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar por id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/naves/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves",
+						"1"
+					]
+				},
+				"description": "Este endpoint nos devolverá los datos de la nave correspondiente al id que solicitemos en la petición.\n\nSi introducimos un valor que no corresponde con ninguna nave nos devolverá un error 404 con el mensaje \"No se encontró ningún resultado\".\n\nSi introducimos un caracter no numérico obtendremos como respuesta un error 500 con el mensaje \"Ocurrió un error inesperado\".\n\nEn la URL de ejemplo solicitamos los datos de la nave correspondiente al id 1"
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar por nombre",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/naves/buscar?nombre=endU",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves",
+						"buscar"
+					],
+					"query": [
+						{
+							"key": "nombre",
+							"value": "endU"
+						}
+					]
+				},
+				"description": "Este endpoint nos devolverá todas las naves espaciales cuyo nombre contenga la cadena especificada en la petición.\n\nSi pasamos el parámetro vacío devolverá todos los resultados pues no aplicará ningún filtro.\n\nEsta búsqueda no hace distinción de mayúsculas y minúsculas."
+			},
+			"response": []
+		},
+		{
+			"name": "Crear nave",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nombre\": \"Nave de los heptapods\",\r\n    \"aparicion\": \"Arrival\",\r\n    \"tipo\": \"Película\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/naves",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves"
+					]
+				},
+				"description": "Este método guardará una nueva nave espacial con los datos introducidos.\n\nSerá necesario enviar un body similar al del ejemplo, con \"nombre\", \"aparicion\" y \"tipo\".\n\nEl identificador de las naves espaciales es el id, por lo que si se intenta insertar una con los mismos datos de alguna nave existente se insertará pero con un id diferente."
+			},
+			"response": []
+		},
+		{
+			"name": "Añadir lista",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\r\n    \"nombre\": \"Halcón Milenario\",\r\n    \"aparicion\": \"Star Wars\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"Endurance\",\r\n    \"aparicion\": \"Interstellar\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"USS Enterprise\",\r\n    \"aparicion\": \"Star Trek\",\r\n    \"tipo\": \"Serie\"\r\n},\r\n{\r\n    \"nombre\": \"Nave nodriza\",\r\n    \"aparicion\": \"District 9\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"Nave Nodriza\",\r\n    \"aparicion\": \"Encuentros en la tercera fase\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"Platillo Volante\",\r\n    \"aparicion\": \"Independence Day\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"Discovery One\",\r\n    \"aparicion\": \"2001: Una Odisea del Espacio\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"Derelict\",\r\n    \"aparicion\": \"Alien, Prometheus\",\r\n    \"tipo\": \"Película\"\r\n},\r\n{\r\n    \"nombre\": \"Serenity\",\r\n    \"aparicion\": \"Firefly\",\r\n    \"tipo\": \"Serie\"\r\n},\r\n{\r\n    \"nombre\": \"Nave de los heptapods\",\r\n    \"aparicion\": \"Arrival\",\r\n    \"tipo\": \"Película\"\r\n}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/naves/list",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves",
+						"list"
+					]
+				},
+				"description": "Este método es similar al de crear nave pero admite una lista por si queremos añadir muchas naves espaciales a la vez."
+			},
+			"response": []
+		},
+		{
+			"name": "Actualizar nave",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"id\": \"10\",\r\n    \"nombre\": \"Nave de los heptapods\",\r\n    \"aparicion\": \"Arrival\",\r\n    \"tipo\": \"Película\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/api/naves",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves"
+					]
+				},
+				"description": "Este método actualizará la nave cuyo id corresponda con el id introducido.\n\nActualizará todos los campos, por lo que si enviamos algún campo vacío también se actualizará y quedará \"\".\n\nSi introducimos un id que no existe nos devolverá un error 404 con el mensaje \"No se encontró ningún resultado\".\n\nSi introducimos un caracter no numérico obtendremos como respuesta un error 500 con el mensaje \"Ocurrió un error inesperado\"."
+			},
+			"response": []
+		},
+		{
+			"name": "Eliminar nave",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/api/naves/100",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"naves",
+						"100"
+					]
+				},
+				"description": "Este método eliminará la nave que corresponda con el id introducido.\n\nSi introducimos un id que no existe nos devolverá un error 404 con el mensaje \"No se encontró ningún resultado\".\n\nSi introducimos un caracter no numérico obtendremos como respuesta un error 500 con el mensaje \"Ocurrió un error inesperado\"."
+			},
+			"response": []
+		}
+	]
+}
