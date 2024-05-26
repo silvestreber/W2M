@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.w2m.w2m.dto.NaveEspacialDTO;
+import org.w2m.w2m.exception.NaveNoEncontradaException;
 import org.w2m.w2m.service.NaveEspacialService;
 
 @RestController
@@ -31,12 +32,12 @@ public class NaveEspacialController {
 	}
 	
 	@GetMapping("/{id}")
-    public NaveEspacialDTO consultarNaveId(@PathVariable Long id) {
+    public NaveEspacialDTO consultarNaveId(@PathVariable Long id) throws NaveNoEncontradaException {
         return service.consultarNaveId(id);
     }
 	
 	@GetMapping("/buscar")
-    public List<NaveEspacialDTO> consultarNaveNombre(@RequestParam String nombre) {
+    public List<NaveEspacialDTO> consultarNaveNombre(@RequestParam String nombre) throws NaveNoEncontradaException {
         return service.consultarNaveNombre(nombre);
     }
 	
@@ -46,12 +47,12 @@ public class NaveEspacialController {
     }
 	
 	@PutMapping
-    public void modificarNave(@RequestBody NaveEspacialDTO dto) {
+    public void modificarNave(@RequestBody NaveEspacialDTO dto) throws NaveNoEncontradaException {
         service.modificarNave(dto);
     }
 
     @DeleteMapping("/{id}")
-    public void eliminarNave(@PathVariable Long id) {
+    public void eliminarNave(@PathVariable Long id) throws NaveNoEncontradaException {
         service.eliminarNave(id);
     }
     

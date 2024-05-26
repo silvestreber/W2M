@@ -10,8 +10,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.w2m.w2m.dto.NaveEspacialDTO;
 import org.w2m.w2m.entity.NaveEspacial;
+import org.w2m.w2m.exception.NaveNoEncontradaException;
 import org.w2m.w2m.mapper.NaveEspacialMapper;
 import org.w2m.w2m.repository.NaveEspacialRepository;
+import org.w2m.w2m.util.ConstantesError;
 
 @Service
 public class NaveEspacialService {
@@ -24,36 +26,54 @@ public class NaveEspacialService {
 
 	public Page<NaveEspacialDTO> consultarNaves(int pagina, int tamano) {
 		return repository.findAll(PageRequest.of(pagina, tamano))
-					.map(mapper::naveEspacialToDto);
+				.map(mapper::naveEspacialToDto);
 	}
 
-	public NaveEspacialDTO consultarNaveId(Long id) {
+	public NaveEspacialDTO consultarNaveId(Long id) throws NaveNoEncontradaException {
+		NaveEspacialDTO nave = null;
 		Optional<NaveEspacial> naveEspacial = repository.findById(id);
-		return naveEspacial
+		nave = naveEspacial
 				.map(mapper::naveEspacialToDto)
 				.orElse(null);
+		if (nave == null) {
+			throw new NaveNoEncontradaException(ConstantesError.SIN_RESULTADOS);
+		}
+		return nave;
 	}
 
-	public List<NaveEspacialDTO> consultarNaveNombre(String nombre) {
+	public List<NaveEspacialDTO> consultarNaveNombre(String nombre) throws NaveNoEncontradaException {
+		List<NaveEspacialDTO> navesDto = null;
 		List<NaveEspacial> naves = repository.findByNombreContainingIgnoreCase(nombre);
-		return naves.stream()
-				.map(mapper::naveEspacialToDto)
-				.collect(Collectors.toList());
+		if (!naves.isEmpty()) {
+			navesDto = naves.stream()
+					.map(mapper::naveEspacialToDto)
+					.collect(Collectors.toList());
+		} else {
+			throw new NaveNoEncontradaException(ConstantesError.SIN_RESULTADOS);
+		}
+		return navesDto;
 	}
 	
 	public void crearNave(NaveEspacialDTO dto) {
 		repository.save(mapper.dtoToNaveEspacial(dto));
 	}
 	
-	public void modificarNave(NaveEspacialDTO dto) {
+	public void modificarNave(NaveEspacialDTO dto) throws NaveNoEncontradaException {
 		Optional<NaveEspacial> naveOriginal = repository.findById(dto.getId());
 		if (naveOriginal.isPresent()) {
 			repository.save(mapper.dtoToNaveEspacial(dto));
+		} else {
+			throw new NaveNoEncontradaException(ConstantesError.ERROR_ACTUALIZAR);
 		}
 	}
 	
-	public void eliminarNave(Long id) {
-		repository.deleteById(id);
+	public void eliminarNave(Long id) throws NaveNoEncontradaException {
+		Optional<NaveEspacial> naveEliminar = repository.findById(id);
+		if (naveEliminar.isPresent()) {
+			repository.deleteById(id);
+		} else {
+			throw new NaveNoEncontradaException(ConstantesError.ERROR_ELIMINAR);
+		}
 	}
 	
 	public void crearListaNaves(List<NaveEspacialDTO> listaNaves) {
