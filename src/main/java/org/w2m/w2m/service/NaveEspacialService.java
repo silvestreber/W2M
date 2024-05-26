@@ -1,10 +1,14 @@
 package org.w2m.w2m.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -17,6 +21,8 @@ import org.w2m.w2m.util.ConstantesError;
 
 @Service
 public class NaveEspacialService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(NaveEspacialService.class);
 
 	@Autowired
 	private NaveEspacialRepository repository;
@@ -29,9 +35,11 @@ public class NaveEspacialService {
 				.map(mapper::naveEspacialToDto);
 	}
 
+	@Cacheable(value = "nave", key = "#id")
 	public NaveEspacialDTO consultarNaveId(Long id) throws NaveNoEncontradaException {
 		NaveEspacialDTO nave = null;
 		Optional<NaveEspacial> naveEspacial = repository.findById(id);
+		logger.info(this.getClass().getName() + "consultarNaveId(" + id + ") consultó a base de datos " + new Date());
 		nave = naveEspacial
 				.map(mapper::naveEspacialToDto)
 				.orElse(null);
