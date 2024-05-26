@@ -55,12 +55,12 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.7.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
 	<build>
+		<finalName>w2m</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
