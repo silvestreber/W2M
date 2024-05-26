@@ -30,6 +30,11 @@ public class NaveEspacialService {
 	@Autowired
 	private NaveEspacialMapper mapper;
 
+	public NaveEspacialService(NaveEspacialRepository repositoryMock) {
+		this.repository = repositoryMock;
+		this.mapper = new NaveEspacialMapper();
+	}
+
 	public Page<NaveEspacialDTO> consultarNaves(int pagina, int tamano) {
 		return repository.findAll(PageRequest.of(pagina, tamano))
 				.map(mapper::naveEspacialToDto);
